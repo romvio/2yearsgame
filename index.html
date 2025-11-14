@@ -8,12 +8,24 @@
 <style>
     body {
         font-family: 'Poppins', sans-serif;
-        background: #ffffff;
+        margin: 0;
+        padding: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 0;
-        padding: 40px;
+
+        /* FONDO CORRECTO */
+        background: url("WhatsApp Image 2025-11-14 at 10.22.06 PM(9).jpeg") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    /* OVERLAY SEMI-TRANSPARENTE PARA QUE SE LEA MEJOR TODO */
+    #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255,255,255,0.60);
+        backdrop-filter: blur(2px);
+        z-index: -1;
     }
 
     h1 {
@@ -30,7 +42,6 @@
         border: 2px solid #ff003c;
         text-align: center;
         opacity: 1;
-        transition: opacity 0.8s ease;
     }
 
     #question {
@@ -71,25 +82,18 @@
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        align: center;
     }
 
-    background: url("WhatsApp Image 2025-11-14 at 10.22.06 PM(9).jpeg") no-repeat center center fixed;
-    background-size: cover;
-    filter: brightness(95%) blur(1px);
-
-    /* FADE-IN desde 0 a 1 */
+    /* FADE ANIMATIONS */
     .fade-in {
-        animation: fadeIn 1s forwards;
+        animation: fadeIn 0.8s forwards;
+    }
+    .fade-out {
+        animation: fadeOut 0.8s forwards;
     }
     @keyframes fadeIn {
         from { opacity: 0; }
         to   { opacity: 1; }
-    }
-
-    /* FADE-OUT de 1 a 0 */
-    .fade-out {
-        animation: fadeOut 1s forwards;
     }
     @keyframes fadeOut {
         from { opacity: 1; }
@@ -99,6 +103,8 @@
 </head>
 
 <body>
+
+<div id="overlay"></div>
 
 <h1>FELIZ ANIVERSARIO!</h1>
 
@@ -111,7 +117,7 @@
 </div>
 
 <script>
-// --- PREGUNTAS MÚLTIPLE OPCIÓN ---
+// --- PREGUNTA ---
 const funFacts = [
     {
         question: "¿En qué ciudad nos vimos por primera vez?",
@@ -127,7 +133,7 @@ const card = document.getElementById("card");
 // --- CARGAR PREGUNTA ---
 function loadQuestion() {
     document.getElementById("question").innerHTML = funFacts[current].question;
-
+    
     const optionsDiv = document.getElementById("options");
     optionsDiv.innerHTML = "";
     document.getElementById("riddle").innerHTML = "";
@@ -154,41 +160,51 @@ function checkAnswer(selectedIndex) {
     }
 }
 
-// --- TRANSICIÓN FADE ---
+// --- FADE TRANSITION FIXED ---
 function fadeToRiddle(riddleText) {
+
+    // RESET DE CLASES ANTES DE EMPEZAR
+    card.classList.remove("fade-in", "fade-out");
+
+    // FADE OUT
     card.classList.add("fade-out");
 
     setTimeout(() => {
-        // CLEAR SCREEN
+        // CLEAR
         document.getElementById("question").innerHTML = "";
         document.getElementById("options").innerHTML = "";
         document.getElementById("riddle").innerHTML = riddleText;
         document.getElementById("foundBtn").style.display = "block";
 
-        // FADING IN
+        // RESET Y FADE IN
         card.classList.remove("fade-out");
+        void card.offsetWidth; // <-- hack para reiniciar animación
         card.classList.add("fade-in");
-    }, 900);
+
+    }, 800);
 }
 
 // --- MENSAJE FINAL ---
 function showFinal() {
+
+    card.classList.remove("fade-in", "fade-out");
     card.classList.add("fade-out");
 
     setTimeout(() => {
-        // LIMPIAR TODO
+        // CLEAR
         document.getElementById("riddle").innerHTML = "";
         document.getElementById("foundBtn").style.display = "none";
         document.getElementById("finalMessage").innerHTML =
             "Excelente, bien hecho. Estate atenta para el próximo QR code…";
 
+        // RESET + FADE IN
         card.classList.remove("fade-out");
+        void card.offsetWidth; 
         card.classList.add("fade-in");
-    }, 900);
+
+    }, 800);
 }
 </script>
 
 </body>
 </html>
-
-
