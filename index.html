@@ -16,12 +16,12 @@
 
     h1 {
         color: #ff003c;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         text-align: center;
     }
 
     #card {
-        max-width: 400px;
+        max-width: 450px;
         width: 100%;
         padding: 25px;
         border-radius: 14px;
@@ -35,23 +35,20 @@
         margin-bottom: 15px;
     }
 
-    input {
-        width: 90%;
-        padding: 10px;
-        border: 1.5px solid #ff003c;
+    .option {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        background: #ffe6ec;
+        border: 2px solid #ff003c;
         border-radius: 6px;
-        margin-bottom: 20px;
         font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
-    button {
-        background: #ff003c;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
+    .option:hover {
+        background: #ffd2dd;
     }
 
     #riddle, #finalMessage {
@@ -63,20 +60,25 @@
     #foundBtn {
         display: none;
         margin-top: 20px;
+        background: #ff003c;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
     }
 </style>
 </head>
 
 <body>
 
-<h1>ROFI TEAM – FUN FACTS</h1>
+<h1>FELIZ ANIVERSARIO! – GANA EL REGALO...</h1>
 
 <div id="card">
     <div id="question"></div>
 
-    <input id="answerInput" type="text" placeholder="Escribe tu respuesta...">
-
-    <button onclick="checkAnswer()">Enviar</button>
+    <div id="options"></div>
 
     <div id="riddle"></div>
 
@@ -86,22 +88,13 @@
 </div>
 
 <script>
-// --- PREGUNTAS Y RESPUESTAS EDITABLES ---
+// --- PREGUNTAS MÚLTIPLE OPCIÓN ---
 const funFacts = [
     {
         question: "¿En qué ciudad nos vimos por primera vez?",
-        answer: "mexico",
-        riddle: "Acertaste. Sigue las pistas… tu regalo descansa donde las luces se apagan y los sueños empiezan."
-    },
-    {
-        question: "¿Cuál fue nuestra primera película juntos?",
-        answer: "la la land",
-        riddle: "Muy bien. Tu siguiente pista: está escondido donde guardas lo más frío."
-    },
-    {
-        question: "¿A qué hora era nuestra primera cita?",
-        answer: "7",
-        riddle: "Correcto. La pista dice: mira debajo de aquello que siempre te acompaña cuando sales."
+        options: ["A) París", "B) Nueva York", "C) México", "D) Dubái"],
+        correct: 2,
+        riddle: "Correcto. Tu siguiente pista: busca donde las luces se apagan pero los sueños empiezan."
     }
 ];
 
@@ -110,19 +103,28 @@ let current = 0;
 // --- CARGAR PREGUNTA ---
 function loadQuestion() {
     document.getElementById("question").innerHTML = funFacts[current].question;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    funFacts[current].options.forEach((opt, index) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.innerHTML = opt;
+        button.onclick = () => checkAnswer(index);
+        optionsDiv.appendChild(button);
+    });
 }
+
 loadQuestion();
 
 // --- VERIFICAR RESPUESTA ---
-function checkAnswer() {
-    const input = document.getElementById("answerInput").value.toLowerCase().trim();
-    const correct = funFacts[current].answer.toLowerCase();
-
-    if (input === correct) {
+function checkAnswer(selectedIndex) {
+    if (selectedIndex === funFacts[current].correct) {
         document.getElementById("riddle").innerHTML = funFacts[current].riddle;
         document.getElementById("foundBtn").style.display = "block";
     } else {
-        document.getElementById("riddle").innerHTML = "Mmm… intenta de nuevo 😉";
+        document.getElementById("riddle").innerHTML = "Incorrecto… prueba otra opción 😉";
         document.getElementById("foundBtn").style.display = "none";
     }
 }
@@ -130,9 +132,10 @@ function checkAnswer() {
 // --- MENSAJE FINAL ---
 function showFinal() {
     document.getElementById("finalMessage").innerHTML =
-        "Excelente, bien hecho. Estate atenta para el próximo QR code…";
+        "Excelente, bien hecho. Estate atenta para el próximo regalo… o no 😉";
 }
 </script>
 
 </body>
 </html>
+
