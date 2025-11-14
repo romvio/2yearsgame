@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Rofi Fun Facts</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -27,6 +28,8 @@
         border-radius: 14px;
         border: 2px solid #ff003c;
         text-align: center;
+        opacity: 1;
+        transition: opacity 0.8s ease;
     }
 
     #question {
@@ -68,22 +71,36 @@
         border-radius: 6px;
         cursor: pointer;
     }
+
+    /* FADE-IN desde 0 a 1 */
+    .fade-in {
+        animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* FADE-OUT de 1 a 0 */
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to   { opacity: 0; }
+    }
 </style>
 </head>
 
 <body>
 
-<h1>FELIZ ANIVERSARIO! – GANA EL REGALO...</h1>
+<h1>FELIZ ANIVERSARIO!</h1>
 
 <div id="card">
     <div id="question"></div>
-
     <div id="options"></div>
-
     <div id="riddle"></div>
-
     <button id="foundBtn" onclick="showFinal()">Encontrado</button>
-
     <div id="finalMessage"></div>
 </div>
 
@@ -92,13 +109,14 @@
 const funFacts = [
     {
         question: "¿En qué ciudad nos vimos por primera vez?",
-        options: ["A) París", "B) Nueva York", "C) México", "D) Dubái"],
+        options: ["A) París", "B) Nueva York", "C) México", "D) Abu Dhabi"],
         correct: 2,
         riddle: "Correcto. Tu siguiente pista: busca donde las luces se apagan pero los sueños empiezan."
     }
 ];
 
 let current = 0;
+const card = document.getElementById("card");
 
 // --- CARGAR PREGUNTA ---
 function loadQuestion() {
@@ -106,6 +124,9 @@ function loadQuestion() {
 
     const optionsDiv = document.getElementById("options");
     optionsDiv.innerHTML = "";
+    document.getElementById("riddle").innerHTML = "";
+    document.getElementById("foundBtn").style.display = "none";
+    document.getElementById("finalMessage").innerHTML = "";
 
     funFacts[current].options.forEach((opt, index) => {
         const button = document.createElement("button");
@@ -121,21 +142,47 @@ loadQuestion();
 // --- VERIFICAR RESPUESTA ---
 function checkAnswer(selectedIndex) {
     if (selectedIndex === funFacts[current].correct) {
-        document.getElementById("riddle").innerHTML = funFacts[current].riddle;
-        document.getElementById("foundBtn").style.display = "block";
+        fadeToRiddle(funFacts[current].riddle);
     } else {
         document.getElementById("riddle").innerHTML = "Incorrecto… prueba otra opción 😉";
-        document.getElementById("foundBtn").style.display = "none";
     }
+}
+
+// --- TRANSICIÓN FADE ---
+function fadeToRiddle(riddleText) {
+    card.classList.add("fade-out");
+
+    setTimeout(() => {
+        // CLEAR SCREEN
+        document.getElementById("question").innerHTML = "";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("riddle").innerHTML = riddleText;
+        document.getElementById("foundBtn").style.display = "block";
+
+        // FADING IN
+        card.classList.remove("fade-out");
+        card.classList.add("fade-in");
+    }, 900);
 }
 
 // --- MENSAJE FINAL ---
 function showFinal() {
-    document.getElementById("finalMessage").innerHTML =
-        "Excelente, bien hecho. Estate atenta para el próximo regalo… o no 😉";
+    card.classList.add("fade-out");
+
+    setTimeout(() => {
+        // LIMPIAR TODO
+        document.getElementById("riddle").innerHTML = "";
+        document.getElementById("foundBtn").style.display = "none";
+        document.getElementById("finalMessage").innerHTML =
+            "Excelente, bien hecho. Estate atenta para el próximo QR code…";
+
+        card.classList.remove("fade-out");
+        card.classList.add("fade-in");
+    }, 900);
 }
 </script>
 
 </body>
 </html>
+
 
