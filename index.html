@@ -14,12 +14,10 @@
         flex-direction: column;
         align-items: center;
 
-        /* FONDO CORRECTO */
         background: url("WhatsApp Image 2025-11-14 at 10.16.02 PM(1).jpeg") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* OVERLAY SEMI-TRANSPARENTE PARA QUE SE LEA MEJOR TODO */
     #overlay {
         position: fixed;
         inset: 0;
@@ -44,37 +42,15 @@
         opacity: 1;
     }
 
-    #question {
+    #lastPrompt {
         font-size: 20px;
         font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .option {
-        width: 100%;
-        padding: 12px;
-        margin: 8px 0;
-        background: #ffe6ec;
-        border: 2px solid #ff003c;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .option:hover {
-        background: #ffd2dd;
-    }
-
-    #riddle, #finalMessage {
-        margin-top: 20px;
-        font-size: 18px;
+        margin-bottom: 20px;
         color: #333;
     }
 
-    #foundBtn {
-        display: none;
-        margin-top: 20px;
+    #yesBtn {
+        margin-top: 10px;
         background: #ff003c;
         color: white;
         padding: 10px 20px;
@@ -84,21 +60,18 @@
         cursor: pointer;
     }
 
-    /* FADE ANIMATIONS */
-    .fade-in {
-        animation: fadeIn 0.8s forwards;
+    #letterImg {
+        display: none;
+        width: 100%;
+        margin-top: 20px;
+        border-radius: 12px;
     }
-    .fade-out {
-        animation: fadeOut 0.8s forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to   { opacity: 0; }
-    }
+
+    .fade-in { animation: fadeIn 0.8s forwards; }
+    .fade-out { animation: fadeOut 0.8s forwards; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 </style>
 </head>
 
@@ -109,97 +82,26 @@
 <h1>FELIZ ANIVERSARIO!</h1>
 
 <div id="card">
-    <div id="question"></div>
-    <div id="options"></div>
-    <div id="riddle"></div>
-    <button id="foundBtn" onclick="showFinal()">Encontrado</button>
-    <div id="finalMessage"></div>
+    <div id="lastPrompt">¿Lista para el último regalito?</div>
+    <button id="yesBtn" onclick="showLetter()">Sí</button>
+    <img id="letterImg" src="carta.png" alt="Carta">
 </div>
 
 <script>
-// --- PREGUNTA ---
-const funFacts = [
-    {
-        question: "¿Cuál fue nuestra primer película en el cine?",
-        options: ["A) Interestellar", "B) Dune", "C) Wicked", "D) Napoleon"],
-        correct: 3,
-        riddle: "Correcto. Ahora más difícil, tu siguiente pista es: Estoy en donde se guardan pequeños destinos olvidados, me acuesto donde la luz suspira antes del techo pero después de las camisas. Sólo me encuentran quienes saben mirar hacia arriba sin prisa y donde VALE mirar sin pena: a lado de UNO estoy."
-    }
-];
-
-let current = 0;
-const card = document.getElementById("card");
-
-// --- CARGAR PREGUNTA ---
-function loadQuestion() {
-    document.getElementById("question").innerHTML = funFacts[current].question;
-    
-    const optionsDiv = document.getElementById("options");
-    optionsDiv.innerHTML = "";
-    document.getElementById("riddle").innerHTML = "";
-    document.getElementById("foundBtn").style.display = "none";
-    document.getElementById("finalMessage").innerHTML = "";
-
-    funFacts[current].options.forEach((opt, index) => {
-        const button = document.createElement("button");
-        button.className = "option";
-        button.innerHTML = opt;
-        button.onclick = () => checkAnswer(index);
-        optionsDiv.appendChild(button);
-    });
-}
-
-loadQuestion();
-
-// --- VERIFICAR RESPUESTA ---
-function checkAnswer(selectedIndex) {
-    if (selectedIndex === funFacts[current].correct) {
-        fadeToRiddle(funFacts[current].riddle);
-    } else {
-        document.getElementById("riddle").innerHTML = "Incorrecto… prueba otra opción 😉";
-    }
-}
-
-// --- FADE TRANSITION FIXED ---
-function fadeToRiddle(riddleText) {
-
-    // RESET DE CLASES ANTES DE EMPEZAR
-    card.classList.remove("fade-in", "fade-out");
-
-    // FADE OUT
-    card.classList.add("fade-out");
-
-    setTimeout(() => {
-        // CLEAR
-        document.getElementById("question").innerHTML = "";
-        document.getElementById("options").innerHTML = "";
-        document.getElementById("riddle").innerHTML = riddleText;
-        document.getElementById("foundBtn").style.display = "block";
-
-        // RESET Y FADE IN
-        card.classList.remove("fade-out");
-        void card.offsetWidth; // <-- hack para reiniciar animación
-        card.classList.add("fade-in");
-
-    }, 800);
-}
-
-// --- MENSAJE FINAL ---
-function showFinal() {
+function showLetter() {
+    const card = document.getElementById("card");
 
     card.classList.remove("fade-in", "fade-out");
     card.classList.add("fade-out");
 
     setTimeout(() => {
-        // CLEAR
-        document.getElementById("riddle").innerHTML = "";
-        document.getElementById("foundBtn").style.display = "none";
-        document.getElementById("finalMessage").innerHTML =
-            "Excelente, bien hecho. Espero que las florecitas alegren aún más tu día. \nEstate atenta para el próximo QR code…";
+        document.getElementById("lastPrompt").innerHTML = "";
+        document.getElementById("yesBtn").style.display = "none";
 
-        // RESET + FADE IN
+        document.getElementById("letterImg").style.display = "block";
+
         card.classList.remove("fade-out");
-        void card.offsetWidth; 
+        void card.offsetWidth;
         card.classList.add("fade-in");
 
     }, 800);
